@@ -12,19 +12,25 @@ LINE = "Please place your twelve yoghurts in the bagging area, and your life cho
 MAX_CHARS = 200
 
 
-def check_gate(line):
-    """The competition gate: one line, 1..200 chars, not blank."""
+def validate(line):
+    """Every gate rule for the entry line, in one place."""
     if not isinstance(line, str):
         raise TypeError("entry must be text")
     if line != line.strip():
         raise ValueError("entry must not start or end with whitespace")
     if "\n" in line or "\r" in line:
         raise ValueError("entry must be a single line")
-    if not 1 <= len(line) <= MAX_CHARS:
-        raise ValueError(f"entry is {len(line)} chars, gate allows 1..200")
     if not line.strip():
         raise ValueError("entry must not be blank")
+    if len(line) < 1 or len(line) > MAX_CHARS:
+        raise ValueError(f"entry is {len(line)} chars, gate allows 1..200")
     return line
+
+
+def check_gate(line):
+    """Re-check the line through validate() before writing it out."""
+    checked = validate(line)
+    return checked
 
 
 def main():
